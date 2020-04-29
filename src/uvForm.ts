@@ -2,11 +2,10 @@ import { Shape } from '@rdfine/shacl/Shape'
 import { BlankNode, NamedNode, Term } from 'rdf-js'
 import { SafeClownface, SingleContextClownface } from 'clownface'
 import { PropertyShape } from '@rdfine/shacl'
-import { ShapeMixin } from '@rdfine/shacl/Shape'
-import { ShapeDependencies } from '@rdfine/shacl/dependencies/Shape'
+import * as Shacl from '@rdfine/shacl'
 import RdfResource from '@tpluscode/rdfine'
 
-RdfResource.factory.addMixin(...ShapeDependencies)
+RdfResource.factory.addMixin(...Object.values(Shacl))
 
 export interface Renderer<TResult> {
   append(templateType: Term, shape: Shape, values: SafeClownface, changeCallback): void
@@ -54,7 +53,7 @@ class Listener implements ChangeListener {
 
 export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePointer, resource, renderer, matcher, changeListener }: UvFormParams<TRenderer, TResult>): { result: TResult; changeListener: ChangeListener } {
   const listener = changeListener || new Listener()
-  const shape = new ShapeMixin.Class(shapePointer)
+  const shape = new Shacl.ShapeMixin.Class(shapePointer)
 
   shape.property.forEach((property) => {
     const values = getValue(resource, property.path.id)

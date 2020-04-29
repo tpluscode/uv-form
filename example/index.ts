@@ -20,7 +20,7 @@ class ConsoleRenderer implements Renderer<ConsoleResult> {
 
   append(templateType: Term, shape: Shape | PropertyShape, values: SafeClownface): void {
     let label = shape.id.value
-    if ('name' in shape) {
+    if ('name' in shape && shape.name) {
       label = shape.name.value
     }
 
