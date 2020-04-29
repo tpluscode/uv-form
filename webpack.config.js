@@ -16,6 +16,14 @@ module.exports = merge(
     resolve: {
       extensions: ['.ts', '.js', '.json'],
     },
+    module: {
+      rules: [
+        {
+          test: /\.nq$/,
+          use: ['raw-loader']
+        }
+      ]
+    },
     node: {
       crypto: true,
     },
