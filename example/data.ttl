@@ -1,0 +1,7 @@
+@prefix zzk: <https://zazuko.com/People/> .
+@prefix schema: <http://schema.org/> .
+
+zzk:Adrian a schema:Person ;
+           schema:knows [ a schema:Person ;
+                          schema:name "Thomas" ] ;
+           schema:name "Adrian" .

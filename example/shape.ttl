@@ -1,0 +1,17 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.com/> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:PersonShape
+  a sh:ClassShape ;
+  sh:targetClass schema:Person ;
+  sh:property [
+    sh:path schema:name ;
+    sh:name "Name" ;
+    sh:datatype xsd:string ;
+  ] ;
+  sh:property [
+    sh:path schema:knows ;
+    sh:class schema:Person ;
+] .
