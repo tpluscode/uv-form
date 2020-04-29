@@ -4,8 +4,7 @@ import cf, { SafeClownface } from 'clownface'
 import { resolve } from 'path'
 import { WriteStream } from 'tty'
 import { Term } from 'rdf-js'
-import { PropertyShape } from '@rdfine/shacl'
-import ShapeMixin, { Shape } from '@rdfine/shacl/Shape'
+import { Shape, PropertyShape } from '@rdfine/shacl'
 import namespace from '@rdfjs/namespace'
 import { Renderer, uvForm } from '../src/uvForm'
 import { Matcher } from './matcher'
@@ -41,11 +40,11 @@ async function main() {
   const shapeDataset = await $rdf.dataset().import(fromFile(resolve(__dirname, 'shape.ttl')))
   const dataset = await $rdf.dataset().import(fromFile(resolve(__dirname, 'data.ttl')))
 
-  const shape = new ShapeMixin.Class({ dataset: shapeDataset, term: ex.PersonShape })
+  const shapePointer = cf({ dataset: shapeDataset, term: ex.PersonShape })
   const resource = cf({ dataset, term: $rdf.namedNode('https://zazuko.com/People/Adrian') })
 
   const { result } = uvForm<ConsoleRenderer, ConsoleResult>({
-    shape,
+    shapePointer,
     resource,
     renderer: new ConsoleRenderer(),
     matcher: new Matcher(),

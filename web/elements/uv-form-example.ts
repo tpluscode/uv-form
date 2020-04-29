@@ -2,12 +2,10 @@ import { LitElement, property } from 'lit-element'
 import { html } from 'lit-html'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { Shape } from '@rdfine/shacl'
 import { turtle } from '@tpluscode/rdf-string'
 import Parser from '@rdfjs/parser-n3'
 import stringToStream from 'string-to-stream'
 import namespace from '@rdfjs/namespace'
-import ShapeMixin from '@rdfine/shacl/Shape'
 import './uv-form'
 
 const ex = namespace('http://example.com/')
@@ -42,7 +40,7 @@ zzk:Adrian a schema:Person ;
 
 class UvFormExample extends LitElement {
   @property({ type: Object })
-  public shape: Shape
+  public shape: SingleContextClownface
 
   @property({ type: Object })
   public resource: SingleContextClownface
@@ -55,7 +53,7 @@ class UvFormExample extends LitElement {
     this.resource = cf({ dataset, term: $rdf.namedNode('https://zazuko.com/People/Adrian') })
 
     const shapeDataset = await $rdf.dataset().import(parser.import(stringToStream(shape)))
-    this.shape = new ShapeMixin.Class({
+    this.shape = cf({
       dataset: shapeDataset,
       term: ex.PersonShape,
     })

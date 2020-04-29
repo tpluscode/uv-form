@@ -1,5 +1,4 @@
 import { LitElement, property } from 'lit-element'
-import { Shape } from '@rdfine/shacl'
 import { SingleContextClownface } from 'clownface'
 import { BlankNode, NamedNode } from 'rdf-js'
 import { ChangeListener, Renderer, uvForm } from '../../src/uvForm'
@@ -9,7 +8,7 @@ import { LitHtmlRenderer, LitHtmlResult, NiceWrappedRenderer } from './renderers
 
 class UvForm extends LitElement {
   @property({ type: Object })
-  public shape!: Shape
+  public shape!: SingleContextClownface<NamedNode | BlankNode>
 
   @property({ type: Object })
   public resource!: SingleContextClownface<NamedNode | BlankNode>
@@ -22,7 +21,7 @@ class UvForm extends LitElement {
     }
 
     const form = uvForm<Renderer<LitHtmlResult>, LitHtmlResult>({
-      shape: this.shape,
+      shapePointer: this.shape,
       matcher: new Matcher(),
       renderer: new NiceWrappedRenderer(new LitHtmlRenderer()),
       resource: this.resource,

@@ -2,7 +2,11 @@ import { Shape } from '@rdfine/shacl/Shape'
 import { BlankNode, NamedNode, Term } from 'rdf-js'
 import { SafeClownface, SingleContextClownface } from 'clownface'
 import { PropertyShape } from '@rdfine/shacl'
-import PropertyShapeMixin from '@rdfine/shacl/PropertyShape'
+import { ShapeMixin } from '@rdfine/shacl/Shape'
+import { ShapeDependencies } from '@rdfine/shacl/dependencies/Shape'
+import RdfResource from '@tpluscode/rdfine'
+
+RdfResource.factory.addMixin(...ShapeDependencies)
 
 export interface Renderer<TResult> {
   append(templateType: Term, shape: Shape, values: SafeClownface, changeCallback): void
@@ -10,7 +14,7 @@ export interface Renderer<TResult> {
 }
 
 interface UvFormParams<TRenderer extends Renderer<TResult>, TResult> {
-  shape: Shape
+  shapePointer: SingleContextClownface<NamedNode | BlankNode>
   resource: SingleContextClownface<NamedNode | BlankNode>
   renderer: TRenderer
   matcher: ShapeMatcher
@@ -48,18 +52,18 @@ class Listener implements ChangeListener {
   }
 }
 
-export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shape, resource, renderer, matcher, changeListener }: UvFormParams<TRenderer, TResult>): { result: TResult; changeListener: ChangeListener } {
+export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePointer, resource, renderer, matcher, changeListener }: UvFormParams<TRenderer, TResult>): { result: TResult; changeListener: ChangeListener } {
   const listener = changeListener || new Listener()
+  const shape = new ShapeMixin.Class(shapePointer)
 
   shape.property.forEach((property) => {
-    const ps: PropertyShape = shape._create<PropertyShape>(property._selfGraph, [PropertyShapeMixin])
-    const values = getValue(resource, ps.path.id)
+    const values = getValue(resource, property.path.id)
     const templateType = matcher.matchRenderer(property, values)
 
-    renderer.append(templateType, ps, values, (newValue) => {
+    renderer.append(templateType, property, values, (newValue) => {
       resource
-        .deleteOut(ps.path.id)
-        .addOut(ps.path.id, newValue)
+        .deleteOut(property.path.id)
+        .addOut(property.path.id, newValue)
 
       listener.notify(resource, property, newValue)
     })
