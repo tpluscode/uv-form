@@ -1,12 +1,14 @@
-import { LitElement, property } from 'lit-element'
+import { LitElement, property, TemplateResult } from 'lit-element'
 import { html } from 'lit-html'
 import cf, { SingleContextClownface } from 'clownface'
 import $rdf from 'rdf-ext'
-import { turtle } from '@tpluscode/rdf-string'
 import Parser from '@rdfjs/parser-n3'
 import stringToStream from 'string-to-stream'
 import namespace from '@rdfjs/namespace'
 import './uv-form'
+import { repeat } from 'lit-html/directives/repeat'
+import { shrink } from '@zazuko/rdf-vocabularies'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
 const ex = namespace('http://example.com/')
 const parser = new Parser()
@@ -65,8 +67,34 @@ class UvFormExample extends LitElement {
     return html`
 <uv-form .shape="${this.shape}" .resource="${this.resource}" @changed="${this.formChanged}"></uv-form>
 
-    <pre>${turtle`${this.resource.dataset}`.toString()}</pre>
+    <pre>${this.toJsonLd(this.resource)}</pre>
 `
+  }
+
+  private toJsonLd(obj: SingleContextClownface, level = 0) {
+    const indent = new Array(level * 2).fill(' ')
+    const outQuads = $rdf.dataset([...obj.dataset.match(obj.term)]).clone()
+
+    const jsonLdProps = html`,
+${repeat(outQuads, (quad, i) => {
+    const seperator = i === (outQuads.size - 1) ? '' : ',\n'
+    const property = quad.predicate.equals(rdf.type) ? '@type' : shrink(quad.predicate.value) || quad.predicate.value
+    let value: TemplateResult
+    if (property === '@type') {
+      value = html`"${shrink(quad.object.value) || quad.object.value}"`
+    } else if (quad.object.termType === 'Literal') {
+      value = html`"${quad.object.value}"`
+    } else {
+      value = this.toJsonLd(obj.node(quad.object), level + 1)
+    }
+    return html`  ${indent}"${property}": ${value}${seperator}`
+  })}`
+
+    const id = obj.term.termType === 'BlankNode' ? html`_:${obj.value}` : shrink(obj.value) || obj.value
+
+    return html`{
+  ${indent}"@id": "${id}"${jsonLdProps}
+${indent}}`
   }
 
   private formChanged(e: CustomEvent) {

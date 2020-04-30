@@ -21,6 +21,7 @@
     "@tpluscode/rdfine": "^0.4.12",
     "@tpluscode/rdf-string": "^0.2.11",
     "@rdfine/shacl": "^0.1.1",
+    "@zazuko/rdf-vocabularies": "^2020.3.23",
     "@rdfjs/namespace": "^1.1.0",
     "@rdfjs/parser-n3": "^1.1.0",
     "clownface": "^0.12.3",
