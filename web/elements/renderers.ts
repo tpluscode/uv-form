@@ -40,10 +40,7 @@ export class LitHtmlRenderer implements Renderer<LitHtmlResult> {
   }
 
   renderField(templateType: NamedNode, shape: Shape, values: SafeClownface, set: any) {
-    let next: TemplateResult = html`<input 
-            type="text" 
-            @input="${(e: Event & any) => set(e.target.value)}"
-            .value="${values.values || ''}">`
+    let next: TemplateResult = html``
 
     if (templateType.equals(dash.TextAreaEditor)) {
       next = html`<textarea 

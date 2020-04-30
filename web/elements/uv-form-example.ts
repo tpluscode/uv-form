@@ -75,20 +75,19 @@ class UvFormExample extends LitElement {
     const indent = new Array(level * 2).fill(' ')
     const outQuads = $rdf.dataset([...obj.dataset.match(obj.term)]).clone()
 
-    const jsonLdProps = html`,
-${repeat(outQuads, (quad, i) => {
-    const seperator = i === (outQuads.size - 1) ? '' : ',\n'
-    const property = quad.predicate.equals(rdf.type) ? '@type' : shrink(quad.predicate.value) || quad.predicate.value
-    let value: TemplateResult
-    if (property === '@type') {
-      value = html`"${shrink(quad.object.value) || quad.object.value}"`
-    } else if (quad.object.termType === 'Literal') {
-      value = html`"${quad.object.value}"`
-    } else {
-      value = this.toJsonLd(obj.node(quad.object), level + 1)
-    }
-    return html`  ${indent}"${property}": ${value}${seperator}`
-  })}`
+    const jsonLdProps = html`,\n${repeat(outQuads, (quad, i) => {
+      const seperator = i === (outQuads.size - 1) ? '' : ',\n'
+      const property = quad.predicate.equals(rdf.type) ? '@type' : shrink(quad.predicate.value) || quad.predicate.value
+      let value: TemplateResult
+      if (property === '@type') {
+        value = html`"${shrink(quad.object.value) || quad.object.value}"`
+      } else if (quad.object.termType === 'Literal') {
+        value = html`"${quad.object.value}"`
+      } else {
+        value = this.toJsonLd(obj.node(quad.object), level + 1)
+      }
+      return html`  ${indent}"${property}": ${value}${seperator}`
+    })}`
 
     const id = obj.term.termType === 'BlankNode' ? html`_:${obj.value}` : shrink(obj.value) || obj.value
 
