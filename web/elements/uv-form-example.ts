@@ -92,9 +92,7 @@ ${repeat(outQuads, (quad, i) => {
 
     const id = obj.term.termType === 'BlankNode' ? html`_:${obj.value}` : shrink(obj.value) || obj.value
 
-    return html`{
-  ${indent}"@id": "${id}"${jsonLdProps}
-${indent}}`
+    return html`{\n  ${indent}"@id": "${id}"${jsonLdProps}\n${indent}}`
   }
 
   private formChanged(e: CustomEvent) {
