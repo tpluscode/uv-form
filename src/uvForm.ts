@@ -62,7 +62,10 @@ export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePoin
     renderer.append(templateType, property, values, (newValue) => {
       resource
         .deleteOut(property.path.id)
-        .addOut(property.path.id, newValue)
+
+      if (typeof newValue !== 'undefined' && newValue !== null && newValue !== '') {
+        resource.addOut(property.path.id, newValue)
+      }
 
       listener.notify(resource, property, newValue)
     })

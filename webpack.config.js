@@ -21,6 +21,10 @@ module.exports = merge(
         {
           test: /\.nq$/,
           use: ['raw-loader']
+        },
+        {
+          test: /\.ttl$/,
+          use: ['raw-loader']
         }
       ]
     },

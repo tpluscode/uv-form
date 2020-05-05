@@ -1,0 +1,446 @@
+@prefix matter: <http://matterhorn.tools/rdf/v1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix ebucore: <http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#> .
+@prefix pcdm: <http://pcdm.org/models#> .
+@prefix premis: <http://id.loc.gov/vocabulary/preservation/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdac: <http://rdaregistry.info/Elements/c/> .
+@prefix rdau: <http://rdaregistry.info/Elements/u/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix relationshipSubType: <http://id.loc.gov/vocabulary/preservation/relationshipSubType/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Shapes for objects (Intellectual Entities or IEs) in the Matterhorn RDF Data Model, ISAD(G)-properties
+
+matter:IntellectualEntityShape
+	a sh:NodeShape ;
+	sh:targetClass premis:IntellectualEntity ;
+		sh:property [
+			sh:path rdau:P60049 ;
+			rdfs:comment "Category 'root' or 'node'" ;
+			sh:nodeKind sh:Literal ;
+			sh:minCount 1 ;
+			sh:maxCount 1 ;
+		] ;
+
+		sh:property [
+			sh:path relationshipSubType:hsp ;
+			rdfs:comment "LoC Relationship SubType: 'has Part' for modelling hierarchies of IEs" ;
+			sh:nodeKind sh:IRI ;
+		] ;
+
+		sh:property [
+			sh:path relationshipSubType:isr ;
+			rdfs:comment "LoC Relationship SubType: 'is Represented By', points to a representation" ;
+			sh:nodeKind sh:IRI ;
+		] ;
+
+		sh:property [
+			sh:path dc:identifier ;
+			rdfs:comment "ISAD 1.1" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 10 ;
+		] ;
+
+		sh:property [
+			sh:path dc:title ;
+			rdfs:label "Title"@en ;
+			rdfs:label "Titel"@de ;
+			rdfs:label "Titre"@fr ;
+			rdfs:comment "ISAD 1.2; RDA 'has title'" ;
+#			owl:sameAs rico:title ;
+			sh:datatype xsd:string ;
+			sh:minCount 1 ;
+			sh:maxCount 1 ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 20 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60493 ;
+			rdfs:comment "ISAD 1.2; RDA 'has other title information'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 30 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60515 ;
+			rdfs:comment "ISAD 1.2; RDA 'has title proper'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 40 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60355 ;
+			rdfs:comment "ISAD 1.2; RDA 'has variant title'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 50 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60597 ;
+			rdfs:comment "ISAD 1.2; RDA 'has key title'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 60 ;
+		] ;
+
+		sh:property [
+			sh:path dc:date ;
+			rdfs:comment "ISAD 1.3; exact date" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 70 ;
+		] ;
+
+		sh:property [
+			sh:path time:hasBeginning ;
+			rdfs:comment "ISAD 1.3; from" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 80 ;
+		] ;
+
+		sh:property [
+			sh:path time:hasEnd ;
+			rdfs:comment "ISAD 1.3; to" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 90 ;
+		] ;
+
+		sh:property [
+			sh:path dc:type ;
+			rdfs:comment "ISAD 1.4" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 100 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60550 ;
+			rdfs:comment "ISAD 1.5; RDA 'has extent" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 110 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60134 ;
+			rdfs:comment "ISAD 1.5; RDA 'has note on extent of resource'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 120 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60539 ;
+			rdfs:comment "ISAD 1.5; RDA 'has dimensions'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 130 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60159 ;
+			rdfs:comment "ISAD 1.5; RDA 'has applied material'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:IdentificationGroup ;
+			sh:order 140 ;
+		] ;
+
+
+		sh:property [
+			sh:path prov:wasGeneratedBy ;
+			rdfs:comment "ISAD 2.1" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+			sh:group matter:ContextGroup ;
+			sh:order 150 ;
+		] ;
+
+
+		sh:property [
+			sh:path rdau:P60484 ;
+			rdfs:comment "ISAD 2.2; RDA 'has agent history'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContextGroup ;
+			sh:order 160 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60176 ;
+			rdfs:comment "ISAD 2.3; RDA 'has custodial history of resource'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContextGroup ;
+			sh:order 170 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60583 ;
+			rdfs:comment "ISAD 2.4; RDA 'has immediate source of acquisition of resource'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContextGroup ;
+			sh:order 180 ;
+		] ;
+
+		sh:property [
+			sh:path dc:description ;
+			rdfs:comment "ISAD 3.1" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContentGroup ;
+			sh:order 190 ;
+		] ;
+
+		sh:property [
+			sh:path dct:accrualPolicy ;
+			rdfs:comment "ISAD 3.2" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContentGroup ;
+			sh:order 200 ;
+		] ;
+
+		sh:property [
+			sh:path dct:accrualMethod ;
+			rdfs:comment "ISAD 3.3" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContentGroup ;
+			sh:order 210 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60348 ;
+			rdfs:comment "ISAD 3.4; RDA 'has system of organization'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:ContentGroup ;
+			sh:order 220 ;
+		] ;
+
+		sh:property [
+			sh:path premis:hasRightsGranted ;
+			rdfs:comment "ISAD 4.1 and ISAD 4.2" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+			sh:group matter:AccessGroup ;
+			sh:order 230 ;
+		] ;
+
+		sh:property [
+			sh:path dct:language ;
+			rdfs:comment "ISAD 4.3" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:AccessGroup ;
+			sh:order 240 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60528 ;
+			rdfs:comment "ISAD 4.4; RDA 'has equipment or system requirement'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:AccessGroup ;
+			sh:order 250 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60262 ;
+			rdfs:comment "ISAD 4.5; RDA 'is finding aid'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:AccessGroup ;
+			sh:order 260 ;
+		] ;
+
+		sh:property [
+			sh:path dct:isVersionOf ;
+			rdfs:comment "ISAD 5.1" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+			sh:group matter:RelatedGroup ;
+			sh:order 270 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60272 ;
+			rdfs:comment "ISAD 5.2; RDA 'is reproduced as'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:RelatedGroup ;
+			sh:order 280 ;
+		] ;
+
+		sh:property [
+			sh:path premis:hasRelationship ;
+			rdfs:comment "ISAD 5.3; related material" ;
+			sh:nodeKind sh:IRI ;
+			sh:group matter:RelatedGroup ;
+			sh:order 290 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60333 ;
+			rdfs:comment "ISAD 5.4; RDA 'has publication statement'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:RelatedGroup ;
+			sh:order 300 ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60470 ;
+			rdfs:comment "ISAD 6.1; RDA 'has note on resource'" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:RemarksGroup ;
+			sh:order 310 ;
+		] ;
+
+		sh:property [
+			sh:path dct:conformsTo ;
+			rdfs:comment "ISAD 7.2 Rules and Conventions" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:RemarksGroup ;
+			sh:order 320 ;
+		] ;
+
+		sh:property [
+			sh:path dct:modified ;
+			rdfs:comment "ISAD 7.3" ;
+			sh:nodeKind sh:Literal ;
+			sh:group matter:RemarksGroup ;
+			sh:order 330 ;
+		] ;
+
+# Shapes for objects, non-ISAD(G)-properties
+
+		sh:property [
+			sh:path rdau:P60073 ;
+			rdfs:comment "RDA 'has date of publication'" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60163 ;
+			rdfs:comment "RDA 'has place of publication'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60518 ;
+			rdfs:comment "RDA 'Relates a work to a chronological or geographic coverage of the content of a resource'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60061 ;
+			rdfs:comment "RDA 'Has host institution'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60203 ;
+			rdfs:comment "RDA 'is abstracted as'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60434 ;
+			rdfs:comment "RDA 'has author'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60444 ;
+			rdfs:comment "RDA 'has publisher'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path rdau:P60483 ;
+			rdfs:comment "RDA 'has granting institution or faculty'" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+# Shapes for objects, Preservation Description Information
+
+		sh:property [
+			sh:path ebucore:filename ;
+			rdfs:comment "File Name" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path premis:compositionLevel ;
+			rdfs:comment "0 = basic object or if there is only one compositionLevel in the repository" ;
+			sh:defaultValue "0" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path ebucore:fileSize ;
+			rdfs:comment "File size in Byte" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path ebucore:dateCreated ;
+			rdfs:comment "create date" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path ebucore:dateModified ;
+			rdfs:comment "last modified date" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path premis:originalName ;
+			rdfs:comment "original name of file" ;
+			sh:nodeKind sh:Literal ;
+		] ;
+
+		sh:property [
+			sh:path dct:FileFormat ;
+			rdfs:comment "description of file format" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] ;
+
+		sh:property [
+			sh:path premis:fixity ;
+			rdfs:comment "Link to fixity information encoded in premis:fixity subclasses like crypHashFunc:MD5" ;
+			sh:nodeKind sh:IRI ;
+		] ;
+
+		sh:property [
+			sh:path rdac:C10002 ;
+			rdfs:comment "Application used to create the file" ;
+			sh:nodeKind sh:IRIOrLiteral ;
+		] .
+
+matter:IdentificationGroup a sh:PropertyGroup ;
+	sh:order 10 ;
+	rdfs:label "Identification" ;
+.
+matter:ContextGroup a sh:PropertyGroup ;
+	sh:order 20 ;
+	rdfs:label "Context" ;
+.
+matter:ContentGroup a sh:PropertyGroup ;
+	sh:order 30 ;
+	rdfs:label "Content" ;
+.
+matter:AccessGroup a sh:PropertyGroup ;
+	sh:order 40 ;
+	rdfs:label "Access" ;
+.
+matter:RelatedGroup a sh:PropertyGroup ;
+	sh:order 50 ;
+	rdfs:label "Related" ;
+.
+matter:RemarksGroup a sh:PropertyGroup ;
+	sh:order 60 ;
+	rdfs:label "Remarks" ;
+.
+

@@ -4,9 +4,13 @@ import { BlankNode, NamedNode } from 'rdf-js'
 import { ChangeListener, Renderer, uvForm } from '../../src/uvForm'
 import { html } from 'lit-html'
 import { Matcher } from '../../example/matcher'
-import { LitHtmlRenderer, LitHtmlResult, NiceWrappedRenderer } from './renderers'
+import {
+  GroupingRenderer,
+  LitHtmlResult,
+  MaterialDesignComponents,
+} from './renderers'
 
-class UvForm extends LitElement {
+export class UvForm extends LitElement {
   @property({ type: Object })
   public shape!: SingleContextClownface<NamedNode | BlankNode>
 
@@ -23,7 +27,7 @@ class UvForm extends LitElement {
     const form = uvForm<Renderer<LitHtmlResult>, LitHtmlResult>({
       shapePointer: this.shape,
       matcher: new Matcher(),
-      renderer: new NiceWrappedRenderer(new LitHtmlRenderer()),
+      renderer: new GroupingRenderer(new MaterialDesignComponents()),
       resource: this.resource,
       changeListener: this.changeListener,
     })
