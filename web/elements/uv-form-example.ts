@@ -40,6 +40,8 @@ class UvFormExample extends LitElement {
   @query('paper-textarea')
   private raw: HTMLTextAreaElement
 
+  private validator: any
+
   async connectedCallback() {
     this.edited = cf({ dataset: $rdf.dataset(), term: $rdf.namedNode('http://example.com/') })
 
@@ -48,6 +50,7 @@ class UvFormExample extends LitElement {
       dataset: shapeDataset,
       term: ex.IntellectualEntityShape,
     })
+    this.validator = new Validator(this.shape.dataset)
 
     super.connectedCallback()
   }
@@ -55,6 +58,15 @@ class UvFormExample extends LitElement {
   public static get styles() {
     return css`paper-textarea {
       width: 100%;
+    }
+    
+    split-me {
+      height: 100vh 
+    }
+    
+    div[slot] {
+      overflow: scroll;
+      height: 100vh
     }`
   }
 
@@ -75,14 +87,9 @@ class UvFormExample extends LitElement {
   }
 
   private saveForm() {
-    const report = new Validator(this.shape.dataset).validate(this.form.resource.dataset)
-    if (report.conforms) {
-      this.saved = this.form.resource.dataset.toString()
-      this.validationReport = null
-    } else {
-      console.log(report)
-      this.validationReport = report
-    }
+    this.saved = this.form.resource.dataset.toString()
+    const report = this.validator.validate(this.form.resource.dataset)
+    this.validationReport = report.conforms ? null : report
   }
 
   private async updateForm() {
