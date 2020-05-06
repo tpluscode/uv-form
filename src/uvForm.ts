@@ -4,6 +4,7 @@ import { SafeClownface, SingleContextClownface } from 'clownface'
 import { PropertyShape } from '@rdfine/shacl'
 import * as Shacl from '@rdfine/shacl'
 import RdfResource from '@tpluscode/rdfine'
+import { rdf } from '@tpluscode/rdf-ns-builders'
 
 RdfResource.factory.addMixin(...Object.values(Shacl))
 
@@ -12,6 +13,7 @@ export interface AppendParams {
   shape: Shape | PropertyShape
   values: SafeClownface
   changeCallback: (value: Term | null) => void
+  validationResults: any[]
 }
 
 export interface Renderer<TResult> {
@@ -24,6 +26,7 @@ interface UvFormParams<TRenderer extends Renderer<TResult>, TResult> {
   resource: SingleContextClownface<NamedNode | BlankNode>
   renderer: TRenderer
   matcher: ShapeMatcher
+  validationReport?: any
   changeListener?: ChangeListener
 }
 
@@ -58,13 +61,22 @@ class Listener implements ChangeListener {
   }
 }
 
-export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePointer, resource, renderer, matcher, changeListener }: UvFormParams<TRenderer, TResult>): { result: TResult; changeListener: ChangeListener } {
+export function uvForm<TRenderer extends Renderer<TResult>, TResult>(params: UvFormParams<TRenderer, TResult>): { result: TResult; changeListener: ChangeListener } {
+  const { shapePointer, resource, renderer, matcher, changeListener, validationReport } = params
   const listener = changeListener || new Listener()
   const shape = new Shacl.ShapeMixin.Class(shapePointer)
+
+  if (shape.targetClass) {
+    resource.addOut(rdf.type, shape.targetClass.id)
+  }
 
   shape.property.forEach((property) => {
     const values = getValue(resource, property.path.id)
     const templateType = matcher.matchRenderer(property, values)
+    let validationResults = []
+    if (validationReport) {
+      validationResults = validationReport.results.filter(r => r.sourceShape === `_:${property.id.value}`)
+    }
 
     function changeCallback(newValue: Term) {
       resource
@@ -82,6 +94,7 @@ export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePoin
       shape: property,
       values,
       changeCallback,
+      validationResults,
     })
   })
 

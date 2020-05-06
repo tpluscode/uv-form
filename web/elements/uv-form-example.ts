@@ -11,6 +11,7 @@ import '@polymer/paper-button/paper-button'
 import '@polymer/paper-input/paper-textarea'
 import { defineCustomElements as defineSplitMe } from 'split-me/loader'
 import shape from './shape.ttl'
+import Validator from 'rdf-validate-shacl'
 
 defineSplitMe(window)
 
@@ -29,6 +30,9 @@ class UvFormExample extends LitElement {
 
   @property({ type: Object })
   public value: string
+
+  @property({ type: Object })
+  public validationReport: object | null
 
   @query('#form')
   private form: UvForm
@@ -58,7 +62,7 @@ class UvFormExample extends LitElement {
     return html`
       <split-me n="2">
         <div slot="0">
-            <uv-form slot="0" id="form" .shape="${this.shape}" .resource="${this.edited}"></uv-form>
+            <uv-form slot="0" id="form" .shape="${this.shape}" .resource="${this.edited}" .validationReport="${this.validationReport}"></uv-form>
             <paper-button slot="0" @click="${this.saveForm}">Serialize</paper-button>
         </div>
 
@@ -71,7 +75,14 @@ class UvFormExample extends LitElement {
   }
 
   private saveForm() {
-    this.saved = this.form.resource.dataset.toString()
+    const report = new Validator(this.shape.dataset).validate(this.form.resource.dataset)
+    if (report.conforms) {
+      this.saved = this.form.resource.dataset.toString()
+      this.validationReport = null
+    } else {
+      console.log(report)
+      this.validationReport = report
+    }
   }
 
   private async updateForm() {

@@ -17,6 +17,9 @@ export class UvForm extends LitElement {
   @property({ type: Object })
   public resource!: SingleContextClownface<NamedNode | BlankNode>
 
+  @property({ type: Object })
+  public validationReport: any
+
   public changeListener!: ChangeListener
 
   public render() {
@@ -29,6 +32,7 @@ export class UvForm extends LitElement {
       matcher: new Matcher(),
       renderer: new GroupingRenderer(new MaterialDesignComponents()),
       resource: this.resource,
+      validationReport: this.validationReport,
       changeListener: this.changeListener,
     })
 
