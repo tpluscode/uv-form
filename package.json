@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint . --ext .ts,.js --quiet",
     "test": "jest --coverage",
-    "prepack": "npm run build",
+    "prepack": "npm run compile",
+    "compile": "tsc",
     "start": "ts-node example/index.ts",
     "web": "webpack-dev-server --mode development",
     "build": "webpack --mode production"
