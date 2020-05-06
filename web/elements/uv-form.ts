@@ -1,4 +1,4 @@
-import { LitElement, property } from 'lit-element'
+import { LitElement, property, css } from 'lit-element'
 import { SingleContextClownface } from 'clownface'
 import { BlankNode, NamedNode } from 'rdf-js'
 import { ChangeListener, Renderer, uvForm } from '../../src/uvForm'

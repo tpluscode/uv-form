@@ -32,9 +32,9 @@ class UvFormExample extends LitElement {
   public value: string
 
   @property({ type: Object })
-  public validationReport: object | null
+  public validationReport: any
 
-  @query('#form')
+  @query('uv-form')
   private form: UvForm
 
   @query('paper-textarea')
@@ -74,13 +74,14 @@ class UvFormExample extends LitElement {
     return html`
       <split-me n="2">
         <div slot="0">
-            <uv-form slot="0" id="form" .shape="${this.shape}" .resource="${this.edited}" .validationReport="${this.validationReport}"></uv-form>
             <paper-button slot="0" @click="${this.saveForm}">Serialize</paper-button>
+            ${this.validationReport?.results?.length > 0 ? 'Errors found. Check the tabs' : ''}
+            <uv-form slot="0" .shape="${this.shape}" .resource="${this.edited}" .validationReport="${this.validationReport}"></uv-form>
         </div>
 
         <div slot="1">
-            <paper-textarea .value="${this.saved}" rows="20"></paper-textarea>
             <paper-button @click="${this.updateForm}">Deserialize</paper-button>
+            <paper-textarea .value="${this.saved}" rows="20"></paper-textarea>
         </div>
       </split-me>
 `

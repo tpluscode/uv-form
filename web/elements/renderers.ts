@@ -120,7 +120,7 @@ export class GroupingRenderer implements Renderer<LitHtmlResult> {
 
         return html`<valle-tabs selected="${this.selectedGroup}" @selected-changed="${this.switchTab}">
             ${repeat(orderedGroups, this.renderTab)}
-        </paper-tabs>`
+        </valle-tabs>`
       },
     }
   }
@@ -130,6 +130,6 @@ export class GroupingRenderer implements Renderer<LitHtmlResult> {
   }
 
   private renderTab(g: { group: { label: string }; groupRenderer: Renderer<LitHtmlResult> }) {
-    return html`<valle-tab title="${g.group.label}">${g.groupRenderer.getResult().render()}</paper-tab>`
+    return html`<valle-tab title="${g.group.label}">${g.groupRenderer.getResult().render()}</valle-tab>`
   }
 }
