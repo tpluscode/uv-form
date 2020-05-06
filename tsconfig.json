@@ -15,8 +15,5 @@
     "esModuleInterop": true,
     "experimentalDecorators": true
   },
-  "files": [
-    "src/index.ts"
-  ],
   "include": ["tests", "example", "web"]
 }

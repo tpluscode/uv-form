@@ -1,8 +1,7 @@
-import { Renderer } from '../../src/uvForm'
-import { PropertyGroup, PropertyShape, Shape } from '@rdfine/shacl'
-import { SafeClownface } from 'clownface'
+import { AppendParams, Renderer } from '../../src/uvForm'
+import RDF from '@rdfjs/data-model'
+import { PropertyGroup } from '@rdfine/shacl'
 import { html, TemplateResult } from 'lit-html'
-import { NamedNode } from 'rdf-js'
 import '@polymer/paper-input/paper-input'
 import '@valle/valle-tabs/valle-tabs.js'
 import { repeat } from 'lit-html/directives/repeat'
@@ -19,10 +18,10 @@ export class NiceWrappedRenderer implements Renderer<LitHtmlResult> {
     this.inner = inner
   }
 
-  append(templateType, shape: PropertyShape, values: SafeClownface, set: any): void {
+  append({ shape, templateType, values, changeCallback }: AppendParams): void {
     this.inner.appendField(html`<div>
-        <label>${shape.comment || (shape.name || shape.id).value}</label><br>
-        ${this.inner.renderField(templateType, shape, values, set)}
+        <label>${shape.comment || shape.getString(sh.name) || shape.id.value}</label><br>
+        ${this.inner.renderField({ templateType, shape, values, changeCallback })}
     </div>`)
   }
 
@@ -32,16 +31,26 @@ export class NiceWrappedRenderer implements Renderer<LitHtmlResult> {
 }
 
 interface Components {
-  textbox(templateType: NamedNode, shape: Shape, values: SafeClownface, set: any): TemplateResult
+  textbox(params: AppendParams): TemplateResult
 }
 
 export class MaterialDesignComponents implements Components {
-  textbox(templateType: NamedNode, shape: Shape, values: SafeClownface, set: any) {
+  textbox({ shape, values, changeCallback }: AppendParams) {
     return html`<paper-input 
             type="text"
             .label="${shape.comment}"
-            @value-changed="${(e: CustomEvent) => set(e.detail.value)}"
-            .value="${values.value || ''}">`
+            @value-changed="${this.handleChange(changeCallback)}"
+            .value="${values.value}">`
+  }
+
+  handleChange(changeCallback: AppendParams['changeCallback']) {
+    return (e: CustomEvent) => {
+      if (e.detail.value) {
+        changeCallback(RDF.literal(e.detail.value))
+      } else {
+        changeCallback(null)
+      }
+    }
   }
 }
 
@@ -53,16 +62,16 @@ export class LitHtmlRenderer implements Renderer<LitHtmlResult> {
     this.components = components
   }
 
-  append(templateType: NamedNode, shape: Shape, values: SafeClownface, set: any): void {
-    this.appendField(this.renderField(templateType, shape, values, set))
+  append(params: AppendParams): void {
+    this.appendField(this.renderField(params))
   }
 
   appendField(next: TemplateResult) {
     this.result = html`${this.result} ${next}`
   }
 
-  renderField(templateType: NamedNode, shape: Shape, values: SafeClownface, set: any) {
-    return this.components.textbox(templateType, shape, values, set)
+  renderField(params: AppendParams) {
+    return this.components.textbox(params)
   }
 
   getResult(): LitHtmlResult {
@@ -81,7 +90,7 @@ export class GroupingRenderer implements Renderer<LitHtmlResult> {
     this.components = components
   }
 
-  append(templateType: NamedNode, shape: Shape | PropertyShape, values: SafeClownface, changeCallback): void {
+  append({ shape, templateType, values, changeCallback }: AppendParams): void {
     if (!('group' in shape) || !shape.group) return
 
     let entry = this.groups.get(shape.group.id.value)
@@ -89,7 +98,7 @@ export class GroupingRenderer implements Renderer<LitHtmlResult> {
       entry = { group: shape.group, groupRenderer: new LitHtmlRenderer(this.components) }
     }
 
-    entry.groupRenderer.append(templateType, shape, values, changeCallback)
+    entry.groupRenderer.append({ templateType, shape, values, changeCallback })
     this.groups.set(shape.group.id.value, entry)
   }
 

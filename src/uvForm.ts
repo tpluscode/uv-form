@@ -7,8 +7,15 @@ import RdfResource from '@tpluscode/rdfine'
 
 RdfResource.factory.addMixin(...Object.values(Shacl))
 
+export interface AppendParams {
+  templateType: Term
+  shape: Shape | PropertyShape
+  values: SafeClownface
+  changeCallback: (value: Term | null) => void
+}
+
 export interface Renderer<TResult> {
-  append(templateType: Term, shape: Shape, values: SafeClownface, changeCallback): void
+  append(params: AppendParams): void
   getResult(): TResult
 }
 
@@ -59,15 +66,22 @@ export function uvForm<TRenderer extends Renderer<TResult>, TResult>({ shapePoin
     const values = getValue(resource, property.path.id)
     const templateType = matcher.matchRenderer(property, values)
 
-    renderer.append(templateType, property, values, (newValue) => {
+    function changeCallback(newValue: Term) {
       resource
         .deleteOut(property.path.id)
 
-      if (typeof newValue !== 'undefined' && newValue !== null && newValue !== '') {
+      if (typeof newValue !== 'undefined' && newValue !== null) {
         resource.addOut(property.path.id, newValue)
       }
 
       listener.notify(resource, property, newValue)
+    }
+
+    renderer.append({
+      templateType,
+      shape: property,
+      values,
+      changeCallback,
     })
   })
 

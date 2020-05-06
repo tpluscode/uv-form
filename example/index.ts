@@ -1,12 +1,10 @@
 import fromFile from 'rdf-utils-fs/fromFile'
 import $rdf from 'rdf-ext'
-import cf, { SafeClownface } from 'clownface'
+import cf from 'clownface'
 import { resolve } from 'path'
 import { WriteStream } from 'tty'
-import { Term } from 'rdf-js'
-import { Shape, PropertyShape } from '@rdfine/shacl'
 import namespace from '@rdfjs/namespace'
-import { Renderer, uvForm } from '../src/uvForm'
+import { AppendParams, Renderer, uvForm } from '../src/uvForm'
 import { Matcher } from './matcher'
 
 const ex = namespace('http://example.com/')
@@ -18,7 +16,7 @@ interface ConsoleResult {
 class ConsoleRenderer implements Renderer<ConsoleResult> {
   private readonly lines: string[] = []
 
-  append(templateType: Term, shape: Shape | PropertyShape, values: SafeClownface): void {
+  append({ shape, templateType, values }: AppendParams): void {
     let label = shape.id.value
     if ('name' in shape && shape.name) {
       label = shape.name.value
